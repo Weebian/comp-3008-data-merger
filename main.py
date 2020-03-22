@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np 
 from datetime import datetime
 
+#Variables
 scheme_type_1 = 'Image21'
 scheme_type_2 = 'Text21'
 
@@ -27,7 +28,7 @@ def csv_to_df(csv_file):
     return df
 
 """
-Function to generate a new dataframe with the columns userid (the user), login result (success or failure), and time (time taken to complete a login)
+Function to generate a new dataframe with the columns userid (the user), login result (success or failure), and time (time taken to complete a login) using a specified dataframe
 
 @param df the dataframe to be used for generating the new one
 @return the new dataframe
@@ -35,7 +36,7 @@ Function to generate a new dataframe with the columns userid (the user), login r
 def calculate_time_df(df):
     #variables
     start = None # the initial login time
-    user = None # The user id
+    user = None # The user id of the user for the current login calculation
     temp = [] # list to hold each row of the new dataframe
 
     # Fill empty dataframe
@@ -62,18 +63,18 @@ def calculate_time_df(df):
     return pd.DataFrame(temp, columns = ["userid", "login result", "time"])
 
 """
-Function to generate a dataframe with the mean, median value for success, and mean value for failure for each user
+Function to generate a dataframe with the number of logins for success, failure, and combined total for each user. Also mean of login time for success and failure for each user.
 
 @param df the dataframe to be used for generating the new one
 @return the dataframe with the mean value for success, and mean value for failure for each user
 """
 def calculate_stats_df(df):
-    #split the dataframe into success and fail
+    #split the dataframe into two dataframes for success and failure
     df_success = df[df["login result"] == "success"]
     df_fail = df[df["login result"] == "failure"]
 
     #drop result columns
-    df.drop(['login result'], axis = 1)
+    df = df.drop(['login result'], axis = 1)
     df_success = df_success.drop(['login result'], axis = 1)
     df_fail = df_fail.drop(['login result'], axis = 1)
 
@@ -93,22 +94,6 @@ def calculate_stats_df(df):
     resulting_df[["successful logins", "unsuccessful logins"]] = resulting_df[["successful logins", "unsuccessful logins"]].fillna(value = 0)
 
     return resulting_df
-
-"""
-Function to merge two dataframes
-
-@param df1 one of the dataframes to merge
-@param df2 one of the dataframes to merge
-@return the merged dataframe
-"""
-def merge_df(df1, df2):
-    #Combine the two dataframes
-    result_df = df1.append(df2)
-
-    #Group in terms of userid and login result
-    result_df.groupby(['userid', 'login result'], as_index=False)
-
-    return result_df
 
 """
 Function to join two dataframes and sort based on userid
