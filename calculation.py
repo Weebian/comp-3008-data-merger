@@ -86,23 +86,23 @@ Function to generate a box plot
 @param pwd_scheme the current password scheme
 @param column the column from the dataframe that we will be calculating with
 """
-def generate_box(df, pwd_scheme, column1, column2):
+def generate_box(df, pwd_scheme, column):
     #drop any empty values
-    df.dropna(subset=[column1], inplace=True)
-    df.dropna(subset=[column2], inplace=True)
+    df.dropna(subset=[column], inplace=True)
 
     #generate figure
     plt.subplots(1,1, figsize=(10, 10))
 
     #generate boxplot
-    df.boxplot(column=[column1, column2])
+    df.boxplot(column=column)
 
     #add labels
-    plt.title(pwd_scheme + ": Avg time box plot")
-    plt.ylabel('Num of Users')
+    plt.title(pwd_scheme + ": " + column + " box plot")
+    plt.ylabel('Login time(s)')
+    plt.xlabel('Column name')
 
     #show
-    plt.savefig(pwd_scheme + ' box plot.png', bbox_inches='tight')
+    plt.savefig(pwd_scheme + " " + column + ' box plot.png', bbox_inches='tight')
 
     #clear plot
     plt.close("all")
@@ -138,5 +138,7 @@ generate_hist(text_df, "Text21", "avg login time success (s)", "")
 generate_hist(text_df, "Text21", "avg login time failed (s)", "")
 
 #generate boxplots for the login time per user, successful, and unsuccessful
-generate_box(image_df, "Image21", "avg login time success (s)", "avg login time failed (s)")
-generate_box(text_df, "Text21", "avg login time success (s)", "avg login time failed (s)")
+generate_box(image_df, "Image21", "avg login time success (s)")
+generate_box(image_df, "Image21", "avg login time failed (s)")
+generate_box(text_df, "Text21", "avg login time success (s)")
+generate_box(text_df, "Text21", "avg login time failed (s)")
